@@ -25,8 +25,8 @@ def load_config(configfile=None):
     if configfile:
         loaded = config.read([configfile])
     else:
-        loaded = config.read(['/etc/circusrc',
-                                os.path.expanduser('~/.circusrc')])
+        loaded = config.read(['/etc/circonusapirc',
+                                os.path.expanduser('~/.circonusapirc')])
     log.debug("Loaded config files: %s" % ', '.join(loaded))
     _cached_config = config
     return config
