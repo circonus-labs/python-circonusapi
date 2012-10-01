@@ -12,14 +12,14 @@ def load_config(configfile=None):
 
     config = ConfigParser.SafeConfigParser()
 
-    # First load the default config
-    try:
-        config.readfp(open(os.path.join(os.path.dirname(__file__),
-                                            "..", "data", "defaults")))
-        log.debug("Loaded default configuration")
-    except IOError:
-        log.error("Unable to load default configuraiton. The program"
-                " may not work correctly.")
+   # # First load the default config
+   # try:
+   #     config.readfp(open(os.path.join(os.path.dirname(__file__),
+   #                                         "..", "data", "defaults")))
+   #     log.debug("Loaded default configuration")
+   # except IOError:
+   #     log.error("Unable to load default configuraiton. The program"
+   #             " may not work correctly.")
 
     # Now load the system/user specific config (if any)
     if configfile:
