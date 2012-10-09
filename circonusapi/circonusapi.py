@@ -88,12 +88,13 @@ class CirconusAPI(object):
         if method in self.methods and endpoint in self.endpoints:
             if self.methods[method]['id']:
                 def f(resource_id=None, data=None):
-                    return self.api_call(method,
+                    return self.api_call(self.methods[method]['method'],
                             "%s/%s" % (endpoint, resource_id), data)
                 return f
             else:
                 def g(data=None):
-                    return self.api_call(method, endpoint, data)
+                    return self.api_call(self.methods[method]['method'],
+                            endpoint, data)
                 return g
         else:
             raise AttributeError("%s instance has no attribute '%s'" % (
