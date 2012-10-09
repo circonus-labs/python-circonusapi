@@ -144,7 +144,7 @@ class CirconusAPI(object):
                     data = json.load(e)
                 except ValueError:
                     data = {}
-                raise CirconusAPIError(e.code, data)
+                raise CirconusAPIError(e.code, data, debug=self.debug)
             # We succeeded, exit the for loop
             break
         else:
@@ -194,9 +194,10 @@ class CirconusAPIError(CirconusAPIException):
                     false)
         error -- the error message returned by the API
     """
-    def __init__(self, code, data):
+    def __init__(self, code, data, debug=False):
         self.code = code
         self.data = data
+        self.debug = debug
         if hasattr(data, 'get'):
             self.success = data.get('success', False)
             self.message = data.get('message', '')
@@ -205,5 +206,8 @@ class CirconusAPIError(CirconusAPIException):
             self.message = str(data)
 
     def __str__(self):
-        return "HTTP %s - %s - %s" % (self.code, self.explanation,
-                self.message)
+        debuginfo = ""
+        if self.debug:
+            debuginfo = "\n%s" % json.dumps(self.data)
+        return "HTTP %s - %s - %s%s" % (self.code, self.explanation,
+                self.message, debuginfo)
