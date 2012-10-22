@@ -41,6 +41,7 @@ method.
 """
 import json
 import urllib2
+import urllib
 import time
 
 class CirconusAPI(object):
@@ -111,6 +112,7 @@ class CirconusAPI(object):
         # Allow specifying an endpoint both with and without a leading /
         if endpoint[0] == '/':
             endpoint = endpoint[1:]
+        endpoint = urllib.quote(endpoint)
         url = "https://%s/v2/%s" % (self.hostname, endpoint)
         req = urllib2.Request(url=url, data=data,
             headers={
