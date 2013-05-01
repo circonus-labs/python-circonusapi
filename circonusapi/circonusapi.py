@@ -101,7 +101,7 @@ class CirconusAPI(object):
             raise AttributeError("%s instance has no attribute '%s'" % (
                 self.__class__.__name__, name))
 
-    def api_call(self, method, endpoint, data=None):
+    def api_call(self, method, endpoint, data=None, params={}):
         """Performs a circonus api call."""
 
         # Encode data as json if it isn't already. You can pass a json encoded
@@ -113,6 +113,9 @@ class CirconusAPI(object):
         if endpoint[0] == '/':
             endpoint = endpoint[1:]
         endpoint = urllib.quote(endpoint)
+        if params:
+            endpoint = '%s?%s' % (endpoint, urllib.urlencode(
+                [(i, params[i]) for i in params]))
         url = "https://%s/v2/%s" % (self.hostname, endpoint)
         req = urllib2.Request(url=url, data=data,
             headers={
