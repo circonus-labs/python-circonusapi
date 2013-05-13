@@ -49,6 +49,7 @@ class CirconusAPI(object):
     def __init__(self, token):
         self.debug = False # Set api.debug = True to enable debug messages
         self.hostname = 'api.circonus.com'
+        self.appname = 'Circus' # Set api.appname to use application token other than Circus
         self.token = token
         self.endpoints = [
             'check_bundle',
@@ -120,7 +121,7 @@ class CirconusAPI(object):
         req = urllib2.Request(url=url, data=data,
             headers={
                 "X-Circonus-Auth-Token": self.token,
-                "X-Circonus-App-Name": "Circus",
+                "X-Circonus-App-Name": self.appname,
                 "Accept": "application/json"})
         req.get_method = lambda: method
         if self.debug:
