@@ -94,9 +94,9 @@ class CirconusAPI(object):
                             "%s/%s" % (endpoint, resource_id), data)
                 return f
             else:
-                def g(data=None):
+                def g(data=None, params={}):
                     return self.api_call(self.methods[method]['method'],
-                            endpoint, data)
+                            endpoint, data, params)
                 return g
         else:
             raise AttributeError("%s instance has no attribute '%s'" % (
