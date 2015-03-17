@@ -54,6 +54,7 @@ class CirconusAPI(object):
         self.endpoints = [
             'check_bundle',
             'rule_set',
+            'rule_set_group',
             'graph',
             'template',
             'contact_group',
