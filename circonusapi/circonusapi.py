@@ -123,6 +123,7 @@ class CirconusAPI(object):
             headers={
                 "X-Circonus-Auth-Token": self.token,
                 "X-Circonus-App-Name": self.appname,
+                "Content-Type": "application/json",
                 "Accept": "application/json"})
         req.get_method = lambda: method
         if self.debug:
