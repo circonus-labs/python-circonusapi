@@ -39,10 +39,22 @@ who this is by running api.api_call("GET", my_result['_last_modified_by']) and
 not have to parse out the user number to use the regular api.get_user(123)
 method.
 """
+
 import json
-import urllib2
-import urllib
+import logging
 import time
+
+try:
+    from urllib.request import Request, build_opener, HTTPSHandler
+    from urllib.parse import quote, urlencode
+    from urllib.error import HTTPError
+except ImportError:
+    # Python 2
+    from urllib2 import Request, build_opener, HTTPSHandler, HTTPError
+    from urllib import quote, urlencode
+
+log = logging.getLogger(__name__)
+
 
 class CirconusAPI(object):
 
@@ -60,7 +72,8 @@ class CirconusAPI(object):
             'contact_group',
             'broker',
             'user',
-            'account'
+            'account',
+            'data'
         ]
 
         self.methods = {
@@ -114,28 +127,30 @@ class CirconusAPI(object):
         # Allow specifying an endpoint both with and without a leading /
         if endpoint[0] == '/':
             endpoint = endpoint[1:]
-        endpoint = urllib.quote(endpoint)
+        endpoint = quote(endpoint)
         if params:
-            endpoint = '%s?%s' % (endpoint, urllib.urlencode(
+            endpoint = '%s?%s' % (endpoint, urlencode(
                 [(i, params[i]) for i in params]))
         url = "https://%s/v2/%s" % (self.hostname, endpoint)
-        req = urllib2.Request(url=url, data=data,
+        req = Request(url=url, data=data,
             headers={
                 "X-Circonus-Auth-Token": self.token,
                 "X-Circonus-App-Name": self.appname,
+                "Content-Type": "application/json",
                 "Accept": "application/json"})
         req.get_method = lambda: method
         if self.debug:
             debuglevel = 1
         else:
             debuglevel = 0
-        opener = urllib2.build_opener(
-                urllib2.HTTPSHandler(debuglevel=debuglevel))
+        opener = build_opener(
+            HTTPSHandler(debuglevel=debuglevel)
+        )
         for i in range(5):
             # Retry 5 times until we succeed
             try:
                 fh = opener.open(req)
-            except urllib2.HTTPError, e:
+            except HTTPError as e:
                 if e.code == 401:
                     raise TokenNotValidated
                 if e.code == 403:
@@ -143,12 +158,14 @@ class CirconusAPI(object):
                 if e.code == 429:
                     # We got a rate limit error, retry
                     if self.debug:
-                        print "Rate limited. Retrying: %d" % i
+                        log.debug("Rate limited. Retrying: %d", i)
                     time.sleep(1)
                     continue
                 # Deal with other API errors
                 try:
-                    data = json.load(e)
+                    response_data = e.read().decode('utf-8')
+                    e.close()
+                    data = json.loads(response_data)
                 except ValueError:
                     data = {}
                 raise CirconusAPIError(e.code, data, debug=self.debug)
@@ -159,9 +176,10 @@ class CirconusAPI(object):
             # rate limited, so give up and raise an exception.
             raise RateLimitRetryExceeded
 
-        response_data = fh.read()
+        response_data = fh.read().decode('utf-8')
+        fh.close()
         if self.debug:
-            print "data:", response_data
+            log.debug("data: %s", str(response_data))
 
         if fh.code == 204:
             # Deal with empty response
@@ -170,9 +188,8 @@ class CirconusAPI(object):
             response = json.loads(response_data)
         # Deal with the unlikely case that we get an error with a 200 return
         # code
-        if type(response) == dict and not response.get('success', True):
+        if isinstance(response, dict) and not response.get('success', True):
             raise CirconusAPIError(200, response)
-        fh.close()
         return response
 
 

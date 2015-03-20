@@ -1,28 +1,31 @@
-import ConfigParser
 import os
+import logging
+
+try:
+    from ConfigParser import SafeConfigParser
+except ImportError:
+    # python 3.2+
+    from configparser import ConfigParser as SafeConfigParser
+
+
+log = logging.getLogger(__name__)
 
 _cached_config = None
 
-def load_config(configfile=None):
+def load_config(configfile=None, nocache=False):
     global _cached_config
-    if _cached_config:
+    if _cached_config and not nocache:
         return _cached_config
 
-    config = ConfigParser.SafeConfigParser()
-
-   # # First load the default config
-   # try:
-   #     config.readfp(open(os.path.join(os.path.dirname(__file__),
-   #                                         "..", "data", "defaults")))
-   # except IOError:
-   #     print "Unable to load default configuraiton. The program"
-   #             " may not work correctly."
-
-    # Now load the system/user specific config (if any)
-    if configfile:
-        config.read([configfile])
-    else:
-        config.read(['/etc/circonusapirc',
-                                os.path.expanduser('~/.circonusapirc')])
+    config = SafeConfigParser()
+    config_files = configfile or [
+        '/etc/circonusapirc',
+        os.path.expanduser('~/.circonusapirc')
+    ]
+    if not config.read(config_files):
+        log.warning(
+            "Unable to load default configuraiton. "
+            "The program  may not work correctly."
+        )
     _cached_config = config
     return config
