@@ -54,6 +54,7 @@ class CirconusAPI(object):
         self.endpoints = [
             'check_bundle',
             'rule_set',
+            'rule_set_group',
             'graph',
             'template',
             'contact_group',
@@ -94,9 +95,9 @@ class CirconusAPI(object):
                             "%s/%s" % (endpoint, resource_id), data)
                 return f
             else:
-                def g(data=None):
+                def g(data=None, params={}):
                     return self.api_call(self.methods[method]['method'],
-                            endpoint, data)
+                            endpoint, data, params)
                 return g
         else:
             raise AttributeError("%s instance has no attribute '%s'" % (
@@ -122,6 +123,7 @@ class CirconusAPI(object):
             headers={
                 "X-Circonus-Auth-Token": self.token,
                 "X-Circonus-App-Name": self.appname,
+                "Content-Type": "application/json",
                 "Accept": "application/json"})
         req.get_method = lambda: method
         if self.debug:
