@@ -95,6 +95,18 @@ class CirconusAPITestCase(TestCase):
         except AttributeError:
             pass
 
+    def test_data_endpoint(self):
+        result = self.api.get_data(
+            '159841_available',
+            params=dict(
+                type='numeric',
+                start=1362400895,
+                end=1362487307,
+                period=300
+            )
+        )
+        self.assertTrue(len(result.get('data')) > 20) 
+
     def test_data_wrong_format(self):
         '''
         Test 'data' endpoint and whether errors properly deserialized.
@@ -106,7 +118,14 @@ class CirconusAPITestCase(TestCase):
             self.assertEqual(e.code, 400)
             self.assertTrue('format' in e.message)
 
-    def test_check_bundle(self):
-        bundles = self.api.list_check_bundle()
-        self.assertTrue(type(bundles) is list)
+    def test_contact_group(self):
+        contacts = self.api.list_contact_group()
+        self.assertTrue(type(contacts) is list)
+
+    def test_search_dns_bundles(self):
+        dns_bundles = self.api.list_check_bundle(
+            params=dict(f_type='dns')
+        )
+        for bundle in dns_bundles:
+            self.assertEqual(bundle.get('type'), 'dns')
 

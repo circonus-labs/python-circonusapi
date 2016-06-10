@@ -103,20 +103,28 @@ class CirconusAPI(object):
         method, endpoint = name.split('_', 1)
         if method in self.methods and endpoint in self.endpoints:
             if self.methods[method]['id']:
-                def f(resource_id=None, data=None):
-                    return self.api_call(self.methods[method]['method'],
-                            "%s/%s" % (endpoint, resource_id), data)
+                def f(resource_id=None, data=None, params=None):
+                    return self.api_call(
+                        self.methods[method]['method'],
+                        "%s/%s" % (endpoint, resource_id),
+                        data=data,
+                        params=params
+                    )
                 return f
             else:
                 def g(data=None, params={}):
-                    return self.api_call(self.methods[method]['method'],
-                            endpoint, data, params)
+                    return self.api_call(
+                        self.methods[method]['method'],
+                        endpoint,
+                        data=data,
+                        params=params
+                    )
                 return g
         else:
             raise AttributeError("%s instance has no attribute '%s'" % (
                 self.__class__.__name__, name))
 
-    def api_call(self, method, endpoint, data=None, params={}):
+    def api_call(self, method, endpoint, data=None, params=None):
         """Performs a circonus api call."""
 
         # Encode data as json if it isn't already. You can pass a json encoded
@@ -125,8 +133,7 @@ class CirconusAPI(object):
             data = json.dumps(data)
 
         # Allow specifying an endpoint both with and without a leading /
-        if endpoint[0] == '/':
-            endpoint = endpoint[1:]
+        endpoint = endpoint.lstrip('/')
         endpoint = quote(endpoint)
         if params:
             endpoint = '%s?%s' % (endpoint, urlencode(
