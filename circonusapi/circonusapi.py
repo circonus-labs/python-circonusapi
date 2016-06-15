@@ -44,14 +44,18 @@ import json
 import logging
 import time
 
+from contextlib import closing
+
 try:
     from urllib.request import Request, build_opener, HTTPSHandler
     from urllib.parse import quote, urlencode
-    from urllib.error import HTTPError
+    from urllib.error import HTTPError, URLError
+    from http.client import IncompleteRead
 except ImportError:
     # Python 2
-    from urllib2 import Request, build_opener, HTTPSHandler, HTTPError
+    from urllib2 import Request, build_opener, HTTPSHandler, HTTPError, URLError
     from urllib import quote, urlencode
+    from httplib import IncompleteRead
 
 log = logging.getLogger(__name__)
 
@@ -132,6 +136,10 @@ class CirconusAPI(object):
         if isinstance(data, dict):
             data = json.dumps(data)
 
+        # converting str to bytes in PY3 or str to str PY2
+        if data:
+            data = data.encode('utf-8')
+
         # Allow specifying an endpoint both with and without a leading /
         endpoint = endpoint.lstrip('/')
         endpoint = quote(endpoint)
@@ -156,7 +164,11 @@ class CirconusAPI(object):
         for i in range(5):
             # Retry 5 times until we succeed
             try:
-                fh = opener.open(req)
+                with closing(opener.open(req)) as fh:
+                    response_data = fh.read().decode('utf-8')
+                    code = fh.code
+                    # We succeeded, exit the for loop
+                    break
             except HTTPError as e:
                 if e.code == 401:
                     raise TokenNotValidated
@@ -172,23 +184,23 @@ class CirconusAPI(object):
                 try:
                     response_data = e.read().decode('utf-8')
                     e.close()
-                    data = json.loads(response_data)
+                    data_dict = json.loads(response_data)
                 except ValueError:
-                    data = {}
-                raise CirconusAPIError(e.code, data, debug=self.debug)
-            # We succeeded, exit the for loop
-            break
+                    data_dict = {}
+                raise CirconusAPIError(e.code, data_dict, debug=self.debug)
+            except (URLError, IncompleteRead):
+                log.exception('Endpoint failed. Retrying. %s', url)
+                time.sleep(1)
+                continue
         else:
             # We have been rate limited, retried several times and still got
             # rate limited, so give up and raise an exception.
-            raise RateLimitRetryExceeded
+            raise RateLimitRetryExceeded()
 
-        response_data = fh.read().decode('utf-8')
-        fh.close()
         if self.debug:
             log.debug("data: %s", str(response_data))
 
-        if fh.code == 204:
+        if code == 204:
             # Deal with empty response
             response = {}
         else:
