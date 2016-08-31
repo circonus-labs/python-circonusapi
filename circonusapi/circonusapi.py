@@ -77,7 +77,12 @@ class CirconusAPI(object):
             'broker',
             'user',
             'account',
-            'data'
+            'data',
+            'maintenance',
+            'alert',
+            'annotation',
+            'tag',
+            'template'
         ]
 
         self.methods = {
