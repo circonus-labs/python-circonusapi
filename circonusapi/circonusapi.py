@@ -39,10 +39,26 @@ who this is by running api.api_call("GET", my_result['_last_modified_by']) and
 not have to parse out the user number to use the regular api.get_user(123)
 method.
 """
+
 import json
-import urllib2
-import urllib
+import logging
 import time
+
+from contextlib import closing
+
+try:
+    from urllib.request import Request, build_opener, HTTPSHandler
+    from urllib.parse import quote, urlencode
+    from urllib.error import HTTPError, URLError
+    from http.client import IncompleteRead
+except ImportError:
+    # Python 2
+    from urllib2 import Request, build_opener, HTTPSHandler, HTTPError, URLError
+    from urllib import quote, urlencode
+    from httplib import IncompleteRead
+
+log = logging.getLogger(__name__)
+
 
 class CirconusAPI(object):
 
@@ -60,7 +76,13 @@ class CirconusAPI(object):
             'contact_group',
             'broker',
             'user',
-            'account'
+            'account',
+            'data',
+            'maintenance',
+            'alert',
+            'annotation',
+            'tag',
+            'template'
         ]
 
         self.methods = {
@@ -90,20 +112,28 @@ class CirconusAPI(object):
         method, endpoint = name.split('_', 1)
         if method in self.methods and endpoint in self.endpoints:
             if self.methods[method]['id']:
-                def f(resource_id=None, data=None):
-                    return self.api_call(self.methods[method]['method'],
-                            "%s/%s" % (endpoint, resource_id), data)
+                def f(resource_id=None, data=None, params=None):
+                    return self.api_call(
+                        self.methods[method]['method'],
+                        "%s/%s" % (endpoint, resource_id),
+                        data=data,
+                        params=params
+                    )
                 return f
             else:
                 def g(data=None, params={}):
-                    return self.api_call(self.methods[method]['method'],
-                            endpoint, data, params)
+                    return self.api_call(
+                        self.methods[method]['method'],
+                        endpoint,
+                        data=data,
+                        params=params
+                    )
                 return g
         else:
             raise AttributeError("%s instance has no attribute '%s'" % (
                 self.__class__.__name__, name))
 
-    def api_call(self, method, endpoint, data=None, params={}):
+    def api_call(self, method, endpoint, data=None, params=None):
         """Performs a circonus api call."""
 
         # Encode data as json if it isn't already. You can pass a json encoded
@@ -111,15 +141,18 @@ class CirconusAPI(object):
         if isinstance(data, dict):
             data = json.dumps(data)
 
+        # converting str to bytes in PY3 or str to str PY2
+        if data:
+            data = data.encode('utf-8')
+
         # Allow specifying an endpoint both with and without a leading /
-        if endpoint[0] == '/':
-            endpoint = endpoint[1:]
-        endpoint = urllib.quote(endpoint)
+        endpoint = endpoint.lstrip('/')
+        endpoint = quote(endpoint)
         if params:
-            endpoint = '%s?%s' % (endpoint, urllib.urlencode(
+            endpoint = '%s?%s' % (endpoint, urlencode(
                 [(i, params[i]) for i in params]))
         url = "https://%s/v2/%s" % (self.hostname, endpoint)
-        req = urllib2.Request(url=url, data=data,
+        req = Request(url=url, data=data,
             headers={
                 "X-Circonus-Auth-Token": self.token,
                 "X-Circonus-App-Name": self.appname,
@@ -130,13 +163,18 @@ class CirconusAPI(object):
             debuglevel = 1
         else:
             debuglevel = 0
-        opener = urllib2.build_opener(
-                urllib2.HTTPSHandler(debuglevel=debuglevel))
+        opener = build_opener(
+            HTTPSHandler(debuglevel=debuglevel)
+        )
         for i in range(5):
             # Retry 5 times until we succeed
             try:
-                fh = opener.open(req)
-            except urllib2.HTTPError, e:
+                with closing(opener.open(req)) as fh:
+                    response_data = fh.read().decode('utf-8')
+                    code = fh.code
+                    # We succeeded, exit the for loop
+                    break
+            except HTTPError as e:
                 if e.code == 401:
                     raise TokenNotValidated
                 if e.code == 403:
@@ -144,36 +182,38 @@ class CirconusAPI(object):
                 if e.code == 429:
                     # We got a rate limit error, retry
                     if self.debug:
-                        print "Rate limited. Retrying: %d" % i
+                        log.debug("Rate limited. Retrying: %d", i)
                     time.sleep(1)
                     continue
                 # Deal with other API errors
                 try:
-                    data = json.load(e)
+                    response_data = e.read().decode('utf-8')
+                    e.close()
+                    data_dict = json.loads(response_data)
                 except ValueError:
-                    data = {}
-                raise CirconusAPIError(e.code, data, debug=self.debug)
-            # We succeeded, exit the for loop
-            break
+                    data_dict = {}
+                raise CirconusAPIError(e.code, data_dict, debug=self.debug)
+            except (URLError, IncompleteRead):
+                log.exception('Endpoint failed. Retrying. %s', url)
+                time.sleep(1)
+                continue
         else:
             # We have been rate limited, retried several times and still got
             # rate limited, so give up and raise an exception.
-            raise RateLimitRetryExceeded
+            raise RateLimitRetryExceeded()
 
-        response_data = fh.read()
         if self.debug:
-            print "data:", response_data
+            log.debug("data: %s", str(response_data))
 
-        if fh.code == 204:
+        if code == 204:
             # Deal with empty response
             response = {}
         else:
             response = json.loads(response_data)
         # Deal with the unlikely case that we get an error with a 200 return
         # code
-        if type(response) == dict and not response.get('success', True):
+        if isinstance(response, dict) and not response.get('success', True):
             raise CirconusAPIError(200, response)
-        fh.close()
         return response
 
 

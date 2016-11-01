@@ -1,17 +1,19 @@
-#!/usr/bin/env python
 from distutils.core import setup
 
 setup (
     name="circonusapi",
-    version="0.1.4",
+    version="0.2.5",
     description="Circonus API library",
     author="Mark Harrison",
     author_email="mark@omniti.com",
     url="http://github.com/omniti-labs/circonusapi",
     license="ISC",
-    classifiers = [
+    classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         "Development Status :: 4 - Beta",
         "Environment :: Other Environment",
         "Intended Audience :: Developers",
