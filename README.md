@@ -7,10 +7,12 @@
 
     # Get the api token from the rc file
     c = config.load_config()
-    account = config.get('general', 'default_account')
+    
     # You should provide a way to specify an alternative account here. See
     # the config file section below for some example code.
-    api_token = config.get('tokens', account)
+    account = c.get('general', 'default_account')
+    api_token = c.get('tokens', account)
+
     # Now initialize the API
     api = circonusapi.CirconusAPI(api_token)
 
