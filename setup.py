@@ -4,9 +4,9 @@ setup (
     name="circonusapi",
     version="0.2.5",
     description="Circonus API library",
-    author="Mark Harrison",
-    author_email="mark@omniti.com",
-    url="http://github.com/omniti-labs/circonusapi",
+    maintainer="Heinrich Hartmann",
+    maintainer_email="heinrich.hartmann@circonus.com",
+    url="https://github.com/circonus-labs/python-circonusapi",
     license="ISC",
     classifiers=[
         "Programming Language :: Python",
