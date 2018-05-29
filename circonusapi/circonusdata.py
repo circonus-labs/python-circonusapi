@@ -9,6 +9,9 @@ import math
 from datetime import datetime
 
 from . import circonusapi
+
+# At the time of this writing circllhist is not available on pip.
+# You can get it from: github.com/circonus-labs/libcircllhist/
 from circllhist import Circllhist
 
 FORMAT_FIELDS = [
