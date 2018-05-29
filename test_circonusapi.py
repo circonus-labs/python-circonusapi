@@ -5,15 +5,15 @@ Example:
 
 CIRCONUS_CONFIG=/tmp/test_circonus_config.ini tox
 
-
+The config file must contain a valid token for the Circonus demo account.
 '''
 import os
 
 from tempfile import NamedTemporaryFile
+import unittest
 from unittest import TestCase
 
 from circonusapi import circonusapi, config
-
 
 class ConfigTestCase(TestCase):
 
@@ -97,15 +97,15 @@ class CirconusAPITestCase(TestCase):
 
     def test_data_endpoint(self):
         result = self.api.get_data(
-            '159841_available',
+            '160764_services',
             params=dict(
                 type='numeric',
-                start=1362400895,
-                end=1362487307,
+                start=1514764800,
+                end=1514767800,
                 period=300
             )
         )
-        self.assertTrue(len(result.get('data')) > 20) 
+        self.assertTrue(len(result.get('data')) == 10)
 
     def test_data_wrong_format(self):
         '''
@@ -129,3 +129,5 @@ class CirconusAPITestCase(TestCase):
         for bundle in dns_bundles:
             self.assertEqual(bundle.get('type'), 'dns')
 
+if __name__ == '__main__':
+    unittest.main()

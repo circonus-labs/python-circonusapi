@@ -65,7 +65,7 @@ class CirconusAPI(object):
     def __init__(self, token):
         self.debug = False # Set api.debug = True to enable debug messages
         self.hostname = 'api.circonus.com'
-        self.appname = 'Circus' # Set api.appname to use application token other than Circus
+        self.appname = 'python-circonusapi' # Set api.appname to use a different appname
         self.token = token
         self.endpoints = [
             'check_bundle',
