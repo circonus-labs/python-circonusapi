@@ -1,20 +1,76 @@
-# Circonus API client library
+# Circonus API Client Library
 
-## Example usage
+
+The `circonusapi` python module contains two classes:
+
+- CirconusData
+
+- CirconusAPI
+
+The CirconusAPI class contains methods to manage the Circonus Account (e.g. create checks, graphs, etc) the CirconusData
+class contains higher-level methods for working with data. In particular it comes with a CAQL data fetching method, that
+returns Pandas DataFrames.
+
+## CirconusData
+
+### Example
+
+
+Create a CirconusData Object
+```
+from circonusapi import circonusdata
+circ = circonusdata.CirconusData(api_token)
+```
+
+Run a CAQL query
+```
+from datetime import datetime
+circ.caql('''
+
+  1 + 2 | label("A")
+    
+''', datetime(2020,1,1), 60, 10)
+```
+Result:
+```
+{
+  'version': 'DF4',
+   'head': {'count': 10, 'start': 1577836800, 'period': 60},
+   'meta': [{'kind': 'numeric', 'label': 'CAQL|op:sum()'}],
+   'data': [[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]]
+}
+```
+
+Fetch CAQL as DataFrame
+```
+circ.caqldf("""
+
+    find("duration", limit=10) | label("%tv{__check_target}")
+
+""", datetime(2020, 1, 1), 60, 60 * 24)
+```
+Result:
+```
+                     xkcd.com  xkcd.com  151.101.64.67  k8sdemo2
+2020-01-01 00:00:00         3         3              3        49
+2020-01-01 00:01:00         3         3              3        55
+2020-01-01 00:02:00         3         3              3        61
+2020-01-01 00:03:00         3         3              3        48
+2020-01-01 00:04:00         3         3              3        44
+2020-01-01 00:05:00         3         3              3        38
+2020-01-01 00:06:00         3         3              3        44
+2020-01-01 00:07:00         3         3              3        42
+...
+```
+
+## CirconusAPI
+
+### Example
 
     from circonusapi import circonusapi
-    from circonusapi import config
 
-    # Get the api token from the rc file
-    c = config.load_config()
-    
-    # You should provide a way to specify an alternative account here. See
-    # the config file section below for some example code.
-    account = c.get('general', 'default_account')
-    api_token = c.get('tokens', account)
-
-    # Now initialize the API
-    api = circonusapi.CirconusAPI(api_token)
+    # Initialize the API
+    api = circonusapi.CirconusAPI(<api_token>)
 
     # Uncomment below to enable debug output
     # api.debug = True
@@ -52,7 +108,7 @@
     }
     api.add_rule_set(data)
 
-## Methods
+# ## Methods
 
 All methods begin with a verb, then and underscore, and the circonus API
 endpoint that you wish to operate on. For example, to view a check_bundle,
@@ -86,52 +142,3 @@ resource to operate on. Only list_* and add_* don't take a resource ID.
 Where appropriate, methods also take a data parameter specifying the data to
 pass to the API call. This parameter can either be a python dictionary, or a
 string containing the json encoded object that you wish to pass along.
-
-## Configuration file
-
-In order to not have to specify the API token every time, it can be stored in
-a configuration file. The API library provides functions to load the
-configuration file and find the token. The config module is based on python's
-ConfigParser module.
-
-The config file is: '~/.circonusapirc'. The config module also looks for
-configuration inside /etc/circonusapirc.
-
-Config file format:
-
-    [general]
-    default_account=foo
-
-    [tokens]
-    foo=12345678-9abc-def0-123456789abcdef01
-    bar=12345678-90bc-def0-123456789abcdef01
-
-If you have multiple circonus accounts and/or tokens, you can add them in the
-tokens section. Your app should provide a method to list which token to use,
-and use the value of default_account if one is not specified.
-
-Example code for obtaining the api token:
-
-    import getopt
-    import sys
-
-    from circonusapi import config
-
-    c = config.load_config()
-    account = config.get('general', 'default_account')
-
-    try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "a:")
-    except getopt.GetoptError, err:
-        print str(err)
-        print "Usage: %s [-a account] ..." % sys.argv[0]
-        sys.exit(2)
-
-    for o,a in opts:
-        if o == '-a':
-            account = a
-
-    api_token = config.get('tokens', account)
-
-    # Now initialize the API
-    api = circonusapi.CirconusAPI(api_token)
