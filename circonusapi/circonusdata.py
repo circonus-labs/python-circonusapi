@@ -20,6 +20,11 @@ try:
 except ImportError:
     Circllhsit = None
 
+try:
+    import pandas as pd
+except ImportError:
+    pd = None
+
 
 class CirconusData(object):
     "Circonus data fetching class"
@@ -67,6 +72,7 @@ class CirconusData(object):
         #
         # Convert histogram JSON values to Circllhist objects.
         #
+
         # Don't convert histogram output if Circllhist was not found on the system
         if not Circllhist:
             return res
@@ -82,3 +88,28 @@ class CirconusData(object):
                 res['data'][i] = [ Circllhist.from_dict(h) for h in res['data'][i] ]
 
         return res
+
+
+    def caqldf(self, *args, **kwargs):
+        """
+        Fetch CAQL as pandas DataFrame [1] with:
+
+        - Columns = output metrics
+        - Column names = metric labels
+        - Row index = Timestamps
+
+        [1] https://pandas.pydata.org/
+        """
+        if not pd:
+            raise Exception("pandas not available")
+        res = self.caql(*args, **kwargs)
+        head = res['head']
+        meta = res['meta']
+        return pd.DataFrame(
+            res['data'],
+            columns = [
+                datetime.fromtimestamp(head['start'] + i * head['period'])
+                for i in range(head['count'])
+            ],
+            index = [ m['label'] for m in meta ],
+        ).transpose()
