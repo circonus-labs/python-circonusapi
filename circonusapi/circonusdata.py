@@ -104,9 +104,10 @@ class CirconusData(object):
             raise Exception("pandas not available")
         res = self.caql(*args, **kwargs)
         head = res['head']
-        meta = res['meta']
+        meta = res['meta'] or []
+        data = res['data'] or []
         return pd.DataFrame(
-            res['data'],
+            data,
             columns = [
                 datetime.fromtimestamp(head['start'] + i * head['period'])
                 for i in range(head['count'])
