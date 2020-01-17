@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup (
     name="circonusapi",
-    version="0.3.0",
+    version="0.4.0",
     description="Circonus API library",
     maintainer="Heinrich Hartmann",
     maintainer_email="heinrich.hartmann@circonus.com",
