@@ -1,15 +1,14 @@
 # Circonus API Client Library
 
-
 The `circonusapi` python module contains two classes:
 
 - CirconusData
 
 - CirconusAPI
 
-The CirconusAPI class contains methods to manage the Circonus Account (e.g. create checks, graphs, etc) the CirconusData
-class contains higher-level methods for working with data. In particular it comes with a CAQL data fetching method, that
-returns Pandas DataFrames.
+The CirconusAPI class contains methods to manage the Circonus Account (e.g. create checks, graphs, etc).  The
+CirconusData class contains higher-level methods for working with data. In particular it comes with a CAQL data fetching
+method, that returns Pandas DataFrames.
 
 ## Changelog
 
@@ -120,7 +119,7 @@ Result:
     }
     api.add_rule_set(data)
 
-# ## Methods
+### Methods
 
 All methods begin with a verb, then and underscore, and the circonus API
 endpoint that you wish to operate on. For example, to view a check_bundle,
