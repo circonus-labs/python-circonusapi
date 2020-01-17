@@ -32,7 +32,7 @@ class CirconusData(object):
     def __init__(self, token):
         self._api = circonusapi.CirconusAPI(token)
 
-    def caql(self, query, start, period, count):
+    def caql(self, query, start, period, count, convert_hists = True):
         """
         Fetch data using CAQL.
 
@@ -42,6 +42,8 @@ class CirconusData(object):
                  or datetime object
            period (int): period of data to fetch
            count (int): number of datapoints to fetch
+           convert_hists (boolean, optional): Convert returned histograms to Circllhist objects.
+                  Requires Circllhist to be available.
 
         Returns:
            res (dict): result in DF4 format
@@ -69,26 +71,25 @@ class CirconusData(object):
         }
         res = self._api.api_call("GET", "/caql", params=params)
 
+        # In the case of 0 output metrics, res['meta']/res['data'] might be None
+        if not res['meta']: res['meta'] = []
+        if not res['data']: res['data'] = []
+        assert(len(res['meta']) == len(res['data']))
+
+        if not convert_hists:
+            return res
+
         #
         # Convert histogram JSON values to Circllhist objects.
         #
-
-        # Don't convert histogram output if Circllhist was not found on the system
         if not Circllhist:
-            return res
+            raise ImportError("Circllhist not available")
 
-        # In the case of 0 output metrics, res['meta'] itself might be None
-        if not res['meta']:
-            return res
-
-        assert(len(res['meta']) == len(res['data']))
-        width = len(res['meta'])
-        for i in range(width):
+        for i in range(len(res['meta'])):
             if res['meta'][i]['kind'] == "histogram":
                 res['data'][i] = [ Circllhist.from_dict(h) for h in res['data'][i] ]
 
         return res
-
 
     def caqldf(self, *args, **kwargs):
         """
@@ -101,7 +102,7 @@ class CirconusData(object):
         [1] https://pandas.pydata.org/
         """
         if not pd:
-            raise Exception("pandas not available")
+            raise ImportError("pandas not available")
         res = self.caql(*args, **kwargs)
         head = res['head']
         meta = res['meta'] or []
