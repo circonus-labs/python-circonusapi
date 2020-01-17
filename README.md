@@ -74,6 +74,8 @@ Result:
 ...
 ```
 
+More examples can be found in the ./examples folder in this repository.
+
 ## CirconusAPI
 
 ### Example
