@@ -47,7 +47,7 @@ Result:
 {
   'version': 'DF4',
    'head': {'count': 10, 'start': 1577836800, 'period': 60},
-   'meta': [{'kind': 'numeric', 'label': 'CAQL|op:sum()'}],
+   'meta': [{'kind': 'numeric', 'label': 'A'}],
    'data': [[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]]
 }
 ```
