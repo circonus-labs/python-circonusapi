@@ -11,6 +11,18 @@ The CirconusAPI class contains methods to manage the Circonus Account (e.g. crea
 class contains higher-level methods for working with data. In particular it comes with a CAQL data fetching method, that
 returns Pandas DataFrames.
 
+## Changelog
+
+### 0.4.0 2020-01-17
+
+- Add metadata and DF4 support to CirconusData.caql()
+
+- Add CirconusData.caqldf() method
+
+- Remove CirconusData.search() method. Search functionality is provided via CirconusData.caql().
+
+- Deprecate config.py module
+
 ## CirconusData
 
 ### Example
