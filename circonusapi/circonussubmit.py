@@ -57,6 +57,7 @@ class CirconusSubmit(object):
         # this, we keep data in multiple batches, each containing only one value per metric.
         self._batch = []
         self._url = url
+        self._api = None
 
     def _batch_insert(self, name, val):
         i = 0
@@ -90,6 +91,8 @@ class CirconusSubmit(object):
         Args:
            name (str): Name of check to create
         """
+        if self._api is None:
+            raise Exception('auth() must be called before check_create()')
         secret = ''.join([ random.choice(string.ascii_lowercase + string.digits) for _ in range(16) ])
         check = self._api.api_call("POST", "/check_bundle", {
             'display_name': name,
@@ -106,7 +109,7 @@ class CirconusSubmit(object):
         })
         sys.stderr.write("Created Check {}".format(check))
         self.check = check
-        self.url = check['config']['submission_url']
+        self._url = check['config']['submission_url']
 
     def _add(self, ts, name, data):
         if ts == "now":
