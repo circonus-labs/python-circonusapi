@@ -29,6 +29,27 @@ The CirconusSubmit class contains methods for submitting data to Circonus via a 
 
 - Deprecate config.py module
 
+## Dependencies
+
+Python 2.6,2.7 and 3.x are supported. We recommend using python >3.5.
+
+Optional Dependencies:
+
+* Histogram functionality depends on [libcircllhist](github.com/circonus-labs/libcircllhist) being installed on the system.
+* The method `CirconusData.caqldf()` depends on [pandas](https://pandas.pydata.org/) being installed.
+
+## Installation
+
+Via Pip
+```
+pip install circonusapi
+```
+
+Manual Install
+```
+python setup.py install
+```
+
 ## CirconusData
 
 ### Example
