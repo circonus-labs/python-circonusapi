@@ -1,16 +1,23 @@
 # Circonus API Client Library
 
-The `circonusapi` python module contains two classes:
-
-- CirconusData
+The `circonusapi` python module contains thress classes:
 
 - CirconusAPI
 
-The CirconusAPI class contains methods to manage the Circonus Account (e.g. create checks, graphs, etc).  The
-CirconusData class contains higher-level methods for working with data. In particular it comes with a CAQL data fetching
-method, that returns Pandas DataFrames.
+- CirconusData
+
+- CirconusSubmit
+
+The CirconusAPI class contains methods to manage the Circonus Account (e.g. create checks, graphs, etc).
+The CirconusData class contains higher-level methods for fetching data. 
+In particular it comes with a method that returns CAQL results as Pandas DataFrames.
+The CirconusSubmit class contains methods for submitting data to Circonus via a JSON HTTPTrap.
 
 ## Changelog
+
+### 0.5.0 2020-02-07
+
+- Add CirconusSubmit class
 
 ### 0.4.0 2020-01-17
 
@@ -25,7 +32,6 @@ method, that returns Pandas DataFrames.
 ## CirconusData
 
 ### Example
-
 
 Create a CirconusData Object
 ```
@@ -75,6 +81,29 @@ Result:
 ```
 
 More examples can be found in the ./examples folder in this repository.
+
+## CirconusSubmit
+
+```
+from circonusapi import circonussubmit
+
+# Option A: Create a new check to submit data to
+sub = circonussubmit.CirconusSubmit()
+sub.auth("65669d6b-edfe-4ede-bc51-7f3cae6419cf")
+sub.check_create("circ-submit-1")
+
+# Option B: Use a existing submission URL:
+sub = circonussubmit.CirconusSubmit("<submission url>")
+
+# Add data to batch
+from datetime import datetime
+sub.add_number(datetime(2020, 1, 1, 0, 0, 0), "test-metric-1", 20)
+sub.add_number(datetime(2020, 1, 1, 0, 1, 0), "test-metric-1", 40)
+sub.add_number(datetime(2020, 1, 1, 0, 2, 0), "test-metric-1", 50)
+
+# Submit batch of data
+sub.submit()
+```
 
 ## CirconusAPI
 
