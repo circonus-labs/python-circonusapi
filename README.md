@@ -1,6 +1,6 @@
 # Circonus API Client Library
 
-The `circonusapi` python module contains thress classes:
+The `circonusapi` python module contains three classes:
 
 - CirconusAPI
 
