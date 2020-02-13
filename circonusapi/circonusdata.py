@@ -8,6 +8,7 @@ To gain access to the full functionality use the circonusapi module.
 import math
 from datetime import datetime
 import warnings
+import requests
 
 from . import circonusapi
 
@@ -29,16 +30,64 @@ except ImportError:
 class CirconusData(object):
     "Circonus data fetching class"
 
-    def __init__(self, token):
-        self._api = circonusapi.CirconusAPI(token)
+    def __init__(self, token=None, endpoint=None, account=1):
+        if token:
+            self._mode = "API"
+            self._api = circonusapi.CirconusAPI(token)
+        elif endpoint:
+            self._mode = "IRONdb"
+            self._endpoint = endpoint
+            self._account = account
+        else:
+            raise Exception("No token/endpoint given")
 
-    def caql(self, query, start, period, count, convert_hists = True):
+    @classmethod
+    def from_api(cls, token):
+        """
+        Connect to the Circonus API with a token
+
+        Args:
+           token (str): Circonus API token
+        """
+        return cls(token = token)
+
+    @classmethod
+    def from_irondb(cls, endpoint, account=1):
+        """
+        Connect to an IRONdb node, instead of a CirconusAPI endpoint
+
+        Args:
+           endpoint (str): IRONdb node URL, in the form "<protocol>://<hostname/ip>:<port>",
+                           e.g. "http://localhost:8112"
+           account (int): account id to use for CAQL requests.
+
+        Notes:
+           The current implementation will issue all requests against a single node.
+        """
+        return cls(endpoint = endpoint, account = account)
+
+    def _caql_request(self, params):
+        if self._mode == "API":
+            return self._api.api_call("GET", "/caql", params=params)
+        elif self._mode == "IRONdb":
+            params = dict(params) # copy
+            params['account_id'] = self._account
+            resp = requests.post(
+                self._endpoint + "/extension/lua/caql_v1",
+                json=params
+            )
+            if resp.status_code == 200:
+                return resp.json()
+            else:
+                raise Exception(resp.text)
+
+    def caql(self, query, start, period, count, convert_hists = True, explain=False):
         """
         Fetch data using CAQL.
 
         Args:
            query (str): the CAQL query string
-           start (int/dateimte): starttime of the query. Either UNIX timestamp in seconds 
+           start (int/datetime): starttime of the query. Either UNIX timestamp in seconds
                  or datetime object
            period (int): period of data to fetch
            count (int): number of datapoints to fetch
@@ -63,13 +112,14 @@ class CirconusData(object):
             start = new_start
 
         params = {
+            "explain" : explain,
             "query": query,
             "period": period,
             "start": int(start),
             "end": int(start + count * period),
             "format" : "DF4"
         }
-        res = self._api.api_call("GET", "/caql", params=params)
+        res = self._caql_request(params)
 
         # In the case of 0 output metrics, res['meta']/res['data'] might be None
         if not res['meta']: res['meta'] = []
