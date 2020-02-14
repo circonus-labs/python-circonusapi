@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+#
+# Disclaimer: This script is experimental. Changes may come any time.
+#
+
 import click
 import math
 import json
@@ -10,10 +14,10 @@ from pathlib import Path
 from circonusapi import circonusdata
 
 @click.group()
-@click.option("-e", '--endpoint', default=None)
-@click.option("-a", '--account', default=None)
-@click.option("-t", '--token', default=None)
-@click.option("-c", '--config', default=None)
+@click.option("-e", "--endpoint", default=None)
+@click.option("-a", "--account", default=None)
+@click.option("-t", "--token", default=None)
+@click.option("-c", "--config", default=None)
 @click.pass_context
 def cli(ctx, endpoint, account, token, config):
     if config:
@@ -28,10 +32,10 @@ def cli(ctx, endpoint, account, token, config):
         ctx.obj["token"] = token
 
 @cli.command()
-@click.option("-q", '--query', required=True)
-@click.option("-s", '--start')
-@click.option("-p", '--period', type=float, default = 60)
-@click.option("-c", '--count', type=int, default = 10)
+@click.option("-q", "--query", required=True)
+@click.option("-s", "--start")
+@click.option("-p", "--period", type=float, default = 60)
+@click.option("-n", "--count", type=int, default = 10)
 @click.option("--explain", type=bool, default = False)
 @click.pass_context
 def fetch(ctx, query, start, period, count, explain):
@@ -44,10 +48,10 @@ def fetch(ctx, query, start, period, count, explain):
 
 
 @cli.command()
-@click.option("-q", '--query', required=True)
-@click.option("-s", '--start')
-@click.option("-p", '--period', type=float, default = 60)
-@click.option("-c", '--count', type=int, default = 10)
+@click.option("-q", "--query", required=True)
+@click.option("-s", "--start")
+@click.option("-p", "--period", type=float, default = 60)
+@click.option("-n", "--count", type=int, default = 10)
 @click.pass_context
 def explain(ctx, query, start, period, count):
     start = start or ( math.floor(datetime.now().timestamp() / period) * period - period * count )
