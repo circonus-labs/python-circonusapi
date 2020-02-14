@@ -19,7 +19,7 @@ from . import circonusapi
 try:
     from circllhist import Circllhist
 except ImportError:
-    Circllhsit = None
+    Circllhist = None
 
 try:
     import pandas as pd
