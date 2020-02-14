@@ -47,13 +47,13 @@ import time
 from contextlib import closing
 
 try:
-    from urllib.request import Request, build_opener, HTTPSHandler
+    from urllib.request import Request, urlopen
     from urllib.parse import quote, urlencode
     from urllib.error import HTTPError, URLError
     from http.client import IncompleteRead
 except ImportError:
     # Python 2
-    from urllib2 import Request, build_opener, HTTPSHandler, HTTPError, URLError
+    from urllib2 import Request, urlopen, HTTPError, URLError
     from urllib import quote, urlencode
     from httplib import IncompleteRead
 
@@ -159,17 +159,10 @@ class CirconusAPI(object):
                 "Content-Type": "application/json",
                 "Accept": "application/json"})
         req.get_method = lambda: method
-        if self.debug:
-            debuglevel = 1
-        else:
-            debuglevel = 0
-        opener = build_opener(
-            HTTPSHandler(debuglevel=debuglevel)
-        )
         for i in range(5):
             # Retry 5 times until we succeed
             try:
-                with closing(opener.open(req)) as fh:
+                with closing(urlopen(req)) as fh:
                     response_data = fh.read().decode('utf-8')
                     code = fh.code
                     # We succeeded, exit the for loop
