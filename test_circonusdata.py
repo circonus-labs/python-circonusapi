@@ -23,15 +23,11 @@ class CirconusAPITestCase(TestCase):
         api = circonusdata.CirconusData(token)
         self.api = api
 
-    def test_search(self):
-        m = self.api.search("(check_id:160764) (metric:services)")
-        self.assertEqual(len(m), 1)
-        r = m.fetch(datetime(2018,1,1),60,10)
-        self.assertEqual(len(r['time']), 10)
-
     def test_caql(self):
-        c = self.api.caql("search:metric('(check_id:160764) (metric:services)')", datetime(2018,1,1), 60, 10)
-        self.assertEqual(len(c['time']), 10)
+        c = self.api.caql("123", datetime(2018,1,1), 60, 10, convert_hists=False)
+        self.assertEqual(len(c['data']), 1)
+        self.assertEqual(len(c['data'][0]), 10)
+        self.assertEqual(c['data'][0][0], 123)
 
 if __name__ == '__main__':
     unittest.main()
