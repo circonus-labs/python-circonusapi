@@ -171,7 +171,7 @@ class CirconusData(object):
         params = {
             "explain" : explain,
             "query": query,
-            "period": period,
+            "period": int(period),
             "start": int(start),
             "end": int(start + count * period),
             "format" : "DF4"

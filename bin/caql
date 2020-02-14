@@ -21,11 +21,16 @@ from circonusapi import circonusdata
 @click.pass_context
 def cli(ctx, endpoint, account, token, config):
     if config:
-        with open(Path("~/.caqlrc").expanduser(), "r") as fh:
+        with open(Path("~/.circonusrc.json").expanduser(), "r") as fh:
             cfg = json.load(fh)[config]
-            ctx.obj["endpoint"] = cfg.get("endpoint")
-            ctx.obj["account"] = cfg.get("account")
-            ctx.obj["token"] = cfg.get("token")
+            if type(cfg) == str:
+                ctx.obj["endpoint"] = None
+                ctx.obj["account"] = None
+                ctx.obj["token"] = cfg
+            elif type(cfg) == dict:
+                ctx.obj["endpoint"] = cfg.get("endpoint")
+                ctx.obj["account"] = cfg.get("account")
+                ctx.obj["token"] = None
     else:
         ctx.obj["endpoint"] = endpoint
         ctx.obj["account"] = account
