@@ -1,9 +1,14 @@
 """
-Circonus DataSubmission API
+====================
+Class CirconusSubmit
+====================
 
-This module provides methods to submit data to Circonus via a HTTPTrap check.
+This class provides methods to submit data to Circonus via a HTTPTrap check.
 
-Usage Example:
+Example
+-------
+
+::
 
     from circonusapi import circonussubmit
 
@@ -44,15 +49,13 @@ except ImportError:
 
 
 class CirconusSubmit(object):
+    """Create CirconusSubmit Object
+
+    Args:
+       - url (str, optional): URL to submit data to
+    """
 
     def __init__(self, url = None):
-        """
-        Create CirconusSubmit Object
-
-        Args:
-            url (str, optional): URL to submit data to
-        """
-
         # HTTPTrap does not allow us to submit multiple values for the same metrics.  To make-up for
         # this, we keep data in multiple batches, each containing only one value per metric.
         self._batch = []
@@ -79,7 +82,7 @@ class CirconusSubmit(object):
         """Authenticate to the API with given token
 
         Args:
-           token (str): API token
+           - token (str): API token
         """
         self._api = circonusapi.CirconusAPI(token)
 
@@ -89,7 +92,7 @@ class CirconusSubmit(object):
         Requires .auth() to be called beforehand.
 
         Args:
-           name (str): Name of check to create
+           - name (str): Name of check to create
         """
         if self._api is None:
             raise Exception('auth() must be called before check_create()')
@@ -124,9 +127,9 @@ class CirconusSubmit(object):
         Add a numeric value to next batch.
 
         Args:
-           ts (number): Timestamp in seconds since epoch.
-           name (str): Metric name, including stream tags.
-           value (number): value to submit.
+           - ts (number): Timestamp in seconds since epoch.
+           - name (str): Metric name, including stream tags.
+           - value (number): value to submit.
         """
         self._add(ts, name, { "_type" : "n", "_value" : value })
 
@@ -135,10 +138,9 @@ class CirconusSubmit(object):
         Add a histogram value to next batch.
 
         Args:
-           ts (number): Timestamp in seconds since epoch, or "now" as a string.
-           name (str): Metric name, including stream tags.
-           value (CircllHist): value to submit.
-
+           - ts (number): Timestamp in seconds since epoch, or "now" as a string.
+           - name (str): Metric name, including stream tags.
+           - value (CircllHist): value to submit.
         """
         self._add(ts, name, { "_type" : "h", "_value" : hist.to_b64() })
 

@@ -1,38 +1,106 @@
 """
-Circonus API Client for Circonus API v2
+=================
+Class CirconusAPI
+=================
 
-API calls are mapped onto methods as an action, followed by an underscore,
-folowed by an object. For example, to list checks, you would use the
-list_check_bundle method, where 'list' is the action, and 'check_bundle' is
-the object type that you want to list (in other words, the circonus API
-endpoint specified in the docs).
+Example
+-------
+::
+
+   from circonusapi import circonusapi
+
+    # Initialize the API
+    api = circonusapi.CirconusAPI(<api_token>)
+
+    # List all check bundles
+    checks = api.list_check_bundle()
+
+    # Alternative (lower level) method
+    api.api_call("GET", "/check_bundle")
+
+    # Add a rule set
+    data = {
+        "check": "/check/12345",
+        "contact_groups": {
+            "1": ["On Call"],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": []
+        },
+        "derive": null,
+        "link": null,
+        "metric_name": "foo",
+        "metric_type": "numeric",
+        "notes": null,
+        "parent": null,
+        "rules": [
+            {
+                "criteria": "on absence",
+                "severity": "1",
+                "value": 1,
+                "wait": "0"
+            }
+        ]
+    }
+    api.add_rule_set(data)
+
+Methods
+-------
+
+All methods begin with a verb, then and underscore, and the circonus API
+endpoint that you wish to operate on. For example, to view a check_bundle,
+you would use api.get_check_bundle(1234), and to list all rule sets, use
+api.list_rule_set().
+
+The verbs/actions, and the associated HTTP methods are:
+
+ * add - POST
+ * edit - PUT
+ * delete - DELETE
+ * list - GET (without an ID specified)
+ * get - GET (with an ID specified)
+
+And the valid endpoints are (currently):
+
+ * check_bundle
+ * rule_set
+ * graph
+ * template
+ * contact_group
+ * broker
+ * user
+ * account
+
+
+Method parameters
+-----------------
 
 Methods take two parameters where appropriate:
 
-    resource_id - the ID of whatever you are fetching/modifying/deleting. This
-                  isn't required  for list_X and add_X methods.
-    data - Either a json string or python dict containing the data as required
-           by the circonus API.
+resource_id
+   the ID of whatever you are fetching/modifying/deleting.
+   This isn't required for list_X and add_X methods.
 
-The available actions are list, get, add, edit and delete. They  map onto the
-appropriate circonus API call methods and endpoints (providing an ID as part
-of the endpoint or not as required)
+data
+   Either a json string or python dict containing the data as required
+   by the circonus API.
 
-Examples:
 
-    >>> api = CirconusAPI('12345678-1234-1234-abcd-123456789abc')
-    >>> bundles = api.list_check_bundle()
-    >>> some_bundle = api.get_check_bundle(123)
+Direct Calls
+------------
 
 You can also make API calls directly without using methods. For example:
 
-    List check bundles:
+List check bundles::
+
     >>> api.api_call("GET", "/check_bundle")
 
-    Get a specific check bundle:
+Get a specific check bundle::
+
     >>> api.api_call("GET", "/check_bundle/1")
 
-The alternate method of making an API call is especially useful when
+The direct method of making an API call is especially useful when
 de-referencing a value you get back from the api. For example, the
 _last_modified_by parameter is of the form '/user/XYZ', and you can find out
 who this is by running api.api_call("GET", my_result['_last_modified_by']) and
@@ -61,8 +129,15 @@ log = logging.getLogger(__name__)
 
 
 class CirconusAPI(object):
+    """CirconusAPI Class"""
 
     def __init__(self, token):
+        """Create a CirconusAPI object.
+
+        Args:
+           token (str) : API token
+
+        """
         self.debug = False # Set api.debug = True to enable debug messages
         self.hostname = 'api.circonus.com'
         self.appname = 'python-circonusapi' # Set api.appname to use a different appname
@@ -134,7 +209,16 @@ class CirconusAPI(object):
                 self.__class__.__name__, name))
 
     def api_call(self, method, endpoint, data=None, params=None):
-        """Performs a circonus api call."""
+        """
+        Performs a circonus api call.
+
+        Args:
+          - method (str) : HTTP Method, e.g. "GET" / "POST" / "DELETE"
+          - endpoint (str) : Endpoint to request, e.g. "/checks"
+          - data (str/dict) : Payload to send
+          - params (dict) : Query string parameters
+
+        """
 
         # Encode data as json if it isn't already. You can pass a json encoded
         # string or python dict here.
