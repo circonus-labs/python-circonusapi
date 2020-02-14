@@ -1,8 +1,8 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup (
     name="circonusapi",
-    version="0.4.0",
+    version="0.5.0",
     description="Circonus API library",
     maintainer="Heinrich Hartmann",
     maintainer_email="heinrich.hartmann@circonus.com",
@@ -23,5 +23,9 @@ setup (
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: System :: Monitoring"
     ],
-    packages=['circonusapi']
+    packages=['circonusapi'],
+    install_requires=[
+        'requests',
+        'click'
+    ],
 )
