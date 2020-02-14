@@ -17,11 +17,11 @@ The CirconusSubmit class contains methods for submitting data to Circonus via a 
 
 via pip
 
-   pip install circonusapi
+    pip install circonusapi
    
 Manual Install
 
-   python setup.py install
+    python setup.py install
 
 ## Requirements and Dependencies
 
