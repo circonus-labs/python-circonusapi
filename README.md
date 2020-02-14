@@ -1,6 +1,6 @@
 # Circonus API Client Library
 
-The `circonusapi` python module contains thress classes:
+The `circonusapi` python module contains three classes:
 
 - CirconusAPI
 
@@ -23,3 +23,14 @@ Manual Install
 
    python setup.py install
 
+## Requirements and Dependencies
+
+- CirconusAPI supports Python 2.6, 2.7 and 3.x
+
+- CirconusSubmit and CirconusData are tested against python 3.x
+
+**Optional Dependencies:**
+
+* Histogram functionality depends on [libcircllhist](github.com/circonus-labs/libcircllhist) being installed.
+
+* The method `CirconusData.caqldf()` depends on [pandas](https://pandas.pydata.org/) being installed.
