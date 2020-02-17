@@ -1,9 +1,15 @@
 # Release procedure
 
- * Edit setup.py and increase the version number
- * Commit the change to setup.py with a message:
+1. Edit setup.py and increase the version number
+2. Update ./docs/changelog.rst
+3. Commit the change to setup.py with a message:
 
-        Version bump to 0.1.X
- * Create the release and upload to pypi:
+    v0.x.y
 
-        ./setup.py sdist upload
+4. Create the release and upload to pypi:
+
+    ./setup.py sdist upload
+
+5. Publish updated documentation
+
+    make docs-publish

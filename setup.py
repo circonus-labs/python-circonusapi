@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup (
     name="circonusapi",
-    version="0.5.0",
+    version="0.6.0",
     description="Circonus API library",
     maintainer="Heinrich Hartmann",
     maintainer_email="heinrich.hartmann@circonus.com",
