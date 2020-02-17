@@ -131,16 +131,22 @@ log = logging.getLogger(__name__)
 class CirconusAPI(object):
     """CirconusAPI Class"""
 
-    def __init__(self, token):
+    def __init__(self, token, baseurl='https://api.circonus.com', appname='python-circonusapi',
+                 debug=False):
         """Create a CirconusAPI object.
 
         Args:
-           token (str) : API token
+           - token (str) : API token
+
+        Kwargs:
+           - baseurl (str) : URL of Circonus API endpoint to connect to.
+           - appname (str) : Appname to use for authentification against the API
+           - debug (boolean) : Turn on/off debugging
 
         """
         self.debug = False # Set api.debug = True to enable debug messages
-        self.hostname = 'api.circonus.com'
-        self.appname = 'python-circonusapi' # Set api.appname to use a different appname
+        self.baseurl = baseurl
+        self.appname = appname
         self.token = token
         self.endpoints = [
             'check_bundle',
@@ -235,7 +241,7 @@ class CirconusAPI(object):
         if params:
             endpoint = '%s?%s' % (endpoint, urlencode(
                 [(i, params[i]) for i in params]))
-        url = "https://%s/v2/%s" % (self.hostname, endpoint)
+        url = "%s/v2/%s" % (self.baseurl, endpoint)
         req = Request(url=url, data=data,
             headers={
                 "X-Circonus-Auth-Token": self.token,
