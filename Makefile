@@ -1,6 +1,6 @@
 .PHONY: docs
 docs:
-	cd docs; make html
+	cd docs && html
 
 .PHONY: docs-publish
 docs-publish:
