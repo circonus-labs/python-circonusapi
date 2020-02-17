@@ -1,0 +1,307 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class CirconusSubmit &mdash; Circonusapi 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Class CirconusData" href="data.html" />
+    <link rel="prev" title="Class CirconusAPI" href="api.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Circonusapi
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">Class CirconusAPI</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Class CirconusSubmit</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="data.html">Class CirconusData</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Circonusapi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Class CirconusSubmit</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/submit.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-circonusapi.circonussubmit"><span id="submit"></span></span><div class="section" id="class-circonussubmit">
+<h1>Class CirconusSubmit<a class="headerlink" href="#class-circonussubmit" title="Permalink to this headline">¶</a></h1>
+<p>This class provides methods to submit data to Circonus via a HTTPTrap check.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">circonusapi</span> <span class="k">import</span> <span class="n">circonussubmit</span>
+
+<span class="c1"># Option A: Create a new check to submit data to</span>
+<span class="n">sub</span> <span class="o">=</span> <span class="n">circonussubmit</span><span class="o">.</span><span class="n">CirconusSubmit</span><span class="p">()</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="s2">&quot;65669d6b-edfe-4ede-bc51-7f3cae6419cf&quot;</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">check_create</span><span class="p">(</span><span class="s2">&quot;circ-submit-1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Option B: Use a existing submission URL:</span>
+<span class="n">sub</span> <span class="o">=</span> <span class="n">circonussubmit</span><span class="o">.</span><span class="n">CirconusSubmit</span><span class="p">(</span><span class="s2">&quot;&lt;submission url&gt;&quot;</span><span class="p">)</span>
+
+<span class="c1"># Add data to batch</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">add_number</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;test-metric-1&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">add_number</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;test-metric-1&quot;</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">add_number</span><span class="p">(</span><span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;test-metric-1&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># Submit batch of data</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">submit</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="class">
+<dt id="circonusapi.circonussubmit.CirconusSubmit">
+<em class="property">class </em><code class="sig-prename descclassname">circonusapi.circonussubmit.</code><code class="sig-name descname">CirconusSubmit</code><span class="sig-paren">(</span><em class="sig-param">url=None</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonussubmit.CirconusSubmit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create CirconusSubmit Object</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>url (str, optional): URL to submit data to</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="circonusapi.circonussubmit.CirconusSubmit.add_histogram">
+<code class="sig-name descname">add_histogram</code><span class="sig-paren">(</span><em class="sig-param">ts</em>, <em class="sig-param">name</em>, <em class="sig-param">hist</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonussubmit.CirconusSubmit.add_histogram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a histogram value to next batch.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>ts (number): Timestamp in seconds since epoch, or “now” as a string.</p></li>
+<li><p>name (str): Metric name, including stream tags.</p></li>
+<li><p>value (CircllHist): value to submit.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonussubmit.CirconusSubmit.add_number">
+<code class="sig-name descname">add_number</code><span class="sig-paren">(</span><em class="sig-param">ts</em>, <em class="sig-param">name</em>, <em class="sig-param">value</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonussubmit.CirconusSubmit.add_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a numeric value to next batch.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>ts (number): Timestamp in seconds since epoch.</p></li>
+<li><p>name (str): Metric name, including stream tags.</p></li>
+<li><p>value (number): value to submit.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonussubmit.CirconusSubmit.auth">
+<code class="sig-name descname">auth</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonussubmit.CirconusSubmit.auth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Authenticate to the API with given token</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>token (str): API token</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonussubmit.CirconusSubmit.check_create">
+<code class="sig-name descname">check_create</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonussubmit.CirconusSubmit.check_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create new HTTPTrap check with given name, and set submission url accordingly.
+Requires .auth() to be called beforehand.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>name (str): Name of check to create</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonussubmit.CirconusSubmit.submit">
+<code class="sig-name descname">submit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonussubmit.CirconusSubmit.submit" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit a batch of data</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="data.html" class="btn btn-neutral float-right" title="Class CirconusData" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="api.html" class="btn btn-neutral float-left" title="Class CirconusAPI" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Circonus Inc.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

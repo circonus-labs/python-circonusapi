@@ -1,0 +1,331 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Class CirconusData &mdash; Circonusapi 0.5.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Changelog" href="changelog.html" />
+    <link rel="prev" title="Class CirconusSubmit" href="submit.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Circonusapi
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="api.html">Class CirconusAPI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="submit.html">Class CirconusSubmit</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Class CirconusData</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Circonusapi</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Class CirconusData</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/data.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-circonusapi.circonusdata"><span id="data"></span></span><div class="section" id="class-circonusdata">
+<h1>Class CirconusData<a class="headerlink" href="#class-circonusdata" title="Permalink to this headline">¶</a></h1>
+<p>This module provides simplified methods for data fetching operations.
+To gain access to the full functionality use the circonusapi module.</p>
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">circonusapi</span> <span class="k">import</span> <span class="n">circonusdata</span>
+
+<span class="c1"># Option A: Connect to the Circonus API using a token</span>
+<span class="n">circ</span> <span class="o">=</span> <span class="n">circonusdata</span><span class="o">.</span><span class="n">from_api</span><span class="p">(</span><span class="n">api_token</span><span class="p">)</span>
+
+<span class="c1"># Option B: Connect to IRONdb instance</span>
+<span class="c1"># circ = circonusdata.from_irondb(&quot;http://irondb1.dev.net:8112&quot;, account=27)</span>
+
+<span class="c1"># Run a CAQL query</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="n">circ</span><span class="o">.</span><span class="n">caql</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">  1 + 2 | label(&quot;A&quot;)</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1"># Result</span>
+<span class="c1">#</span>
+<span class="c1"># {</span>
+<span class="c1">#   &#39;version&#39;: &#39;DF4&#39;,</span>
+<span class="c1">#    &#39;head&#39;: {&#39;count&#39;: 10, &#39;start&#39;: 1577836800, &#39;period&#39;: 60},</span>
+<span class="c1">#    &#39;meta&#39;: [{&#39;kind&#39;: &#39;numeric&#39;, &#39;label&#39;: &#39;A&#39;}],</span>
+<span class="c1">#    &#39;data&#39;: [[3, 3, 3, 3, 3, 3, 3, 3, 3, 3]]</span>
+<span class="c1"># }</span>
+
+<span class="c1"># Fetch CAQL as DataFrame</span>
+<span class="n">circ</span><span class="o">.</span><span class="n">caqldf</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
+
+<span class="s1">    find(&quot;duration&quot;, limit=10) | label(&quot;%tv</span><span class="si">{__check_target}</span><span class="s1">&quot;)</span>
+
+<span class="s1">&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">60</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="c1"># Result</span>
+<span class="c1">#</span>
+<span class="c1">#                      xkcd.com  xkcd.com  151.101.64.67  k8sdemo2</span>
+<span class="c1"># 2020-01-01 00:00:00         3         3              3        49</span>
+<span class="c1"># 2020-01-01 00:01:00         3         3              3        55</span>
+<span class="c1"># 2020-01-01 00:02:00         3         3              3        61</span>
+<span class="c1"># 2020-01-01 00:03:00         3         3              3        48</span>
+</pre></div>
+</div>
+<p>More examples can be found in the ./examples folder in this repository.</p>
+<dl class="class">
+<dt id="circonusapi.circonusdata.CirconusData">
+<em class="property">class </em><code class="sig-prename descclassname">circonusapi.circonusdata.</code><code class="sig-name descname">CirconusData</code><span class="sig-paren">(</span><em class="sig-param">token=None</em>, <em class="sig-param">endpoint=None</em>, <em class="sig-param">account=1</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonusdata.CirconusData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Circonus data fetching class.</p>
+<p>Direct constructor calls should be avoided.
+Use the provided factory methods .from_api() / .from_irondb() to create instances of this class.</p>
+<dl class="method">
+<dt id="circonusapi.circonusdata.CirconusData.caql">
+<code class="sig-name descname">caql</code><span class="sig-paren">(</span><em class="sig-param">query</em>, <em class="sig-param">start</em>, <em class="sig-param">period</em>, <em class="sig-param">count</em>, <em class="sig-param">convert_hists=True</em>, <em class="sig-param">explain=False</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonusdata.CirconusData.caql" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch data using CAQL.</p>
+<dl>
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>query (str): the CAQL query string</p></li>
+<li><p>start (int/datetime): starttime of the query.
+Either UNIX timestamp in seconds or datetime object</p></li>
+<li><p>period (int): period of data to fetch</p></li>
+<li><p>count (int): number of datapoints to fetch</p></li>
+<li><p>convert_hists (boolean, optional): Convert returned histograms to
+Circllhist objects. Requires Circllhist to be available.</p></li>
+</ul>
+</dd>
+<dt>Returns:</dt><dd><p>res (dict): result in DF4 format. Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;head&quot;</span> <span class="p">:</span> <span class="p">{</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="o">...</span><span class="p">,</span> <span class="n">period</span> <span class="o">=</span> <span class="mi">60</span> <span class="p">}</span>
+  <span class="s2">&quot;meta&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">{</span><span class="n">kind</span><span class="p">:</span><span class="s2">&quot;numeric&quot;</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span><span class="s2">&quot;some_metric&quot;</span><span class="p">},</span> <span class="p">{</span><span class="o">...</span><span class="p">},</span> <span class="o">...</span> <span class="p">]</span> <span class="o">--</span> <span class="n">per</span> <span class="n">metric</span> <span class="n">metadata</span>
+  <span class="s2">&quot;data&quot;</span> <span class="p">:</span> <span class="p">[</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">...</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">...</span><span class="p">]</span> <span class="p">]</span> <span class="o">--</span> <span class="n">per</span> <span class="n">metric</span> <span class="n">data</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonusdata.CirconusData.caqldf">
+<code class="sig-name descname">caqldf</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonusdata.CirconusData.caqldf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetch CAQL as pandas DataFrame with …</p>
+<ul class="simple">
+<li><p>Columns : output metrics</p></li>
+<li><p>Column names : metric labels</p></li>
+<li><p>Row index : timestamps</p></li>
+</ul>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonusdata.CirconusData.from_api">
+<em class="property">classmethod </em><code class="sig-name descname">from_api</code><span class="sig-paren">(</span><em class="sig-param">token</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonusdata.CirconusData.from_api" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to the Circonus API with a token</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>token (str): Circonus API token</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="circonusapi.circonusdata.CirconusData.from_irondb">
+<em class="property">classmethod </em><code class="sig-name descname">from_irondb</code><span class="sig-paren">(</span><em class="sig-param">endpoint</em>, <em class="sig-param">account=1</em><span class="sig-paren">)</span><a class="headerlink" href="#circonusapi.circonusdata.CirconusData.from_irondb" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to an IRONdb node, instead of a CirconusAPI endpoint</p>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p>endpoint (str): IRONdb node URL, in the form “&lt;protocol&gt;://&lt;hostname/ip&gt;:&lt;port&gt;”,
+e.g. “<a class="reference external" href="http://localhost:8112">http://localhost:8112</a>”</p></li>
+<li><p>account (int): account id to use for CAQL requests.</p></li>
+</ul>
+</dd>
+<dt>Notes:</dt><dd><p>The current implementation will issue all requests against a single node.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="changelog.html" class="btn btn-neutral float-right" title="Changelog" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="submit.html" class="btn btn-neutral float-left" title="Class CirconusSubmit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Circonus Inc.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
