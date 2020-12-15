@@ -35,6 +35,7 @@ import sys
 import random
 import string
 import requests
+import time
 from datetime import datetime
 
 from . import circonusapi
@@ -116,7 +117,7 @@ class CirconusSubmit(object):
 
     def _add(self, ts, name, data):
         if ts == "now":
-            ts = datetime.utcnow().timestamp()
+            ts = int(time.time())
         if isinstance(ts, datetime):
             ts = ts.timestamp()
         data['_ts'] = int( ts * 1000 ) # convert to ms
